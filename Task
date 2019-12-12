@@ -1,7 +1,6 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 
 class Search(unittest.TestCase):
 
@@ -32,6 +31,7 @@ class Search(unittest.TestCase):
 
         # Вернуться в раздел поиска Все
         self.drv.find_element_by_xpath('//*[@id="hdtb-msb-vis"]/div[1]/a').click()
+
         # Проверить, что первый результат такой же, как и на шаге 3
         xpath = '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a'
         url = self.drv.find_element_by_xpath(xpath)
