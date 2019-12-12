@@ -1,0 +1,45 @@
+import unittest
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+
+class Search(unittest.TestCase):
+
+    def setUp(self):
+        self.drv = webdriver.Chrome('chromedriver.exe')
+        # Открыть страницу http://google.com/ncr
+        self.drv.get('http://www.google.com/ncr')
+
+    def test_search(self):
+        # Выполнить поиск слова “selenide”
+        elm = self.drv.find_element_by_name('q')
+        elm.send_keys('selenide')
+        elm.send_keys(Keys.RETURN)
+
+        # Проверить, что первый результат – ссылка на сайт selenide.org.
+        xpath = '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a'
+        url = self.drv.find_element_by_xpath(xpath)
+        assert 'https://selenide.org' in url.text
+
+        # Перейти в раздел поиска изображений
+        image = '//*[@id="hdtb-msb-vis"]/div[2]/a'
+        self.drv.find_element_by_xpath(image).click()
+
+        # Проверить, что первое изображение неким образом связано с сайтом selenide
+        xpath2 = '//*[@id="rg_s"]/div[1]/a[2]/div[2]/span'
+        image1 = self.drv.find_element_by_xpath(xpath2)
+        assert 'selenide.org' in image1.text
+
+        # Вернуться в раздел поиска Все
+        self.drv.find_element_by_xpath('//*[@id="hdtb-msb-vis"]/div[1]/a').click()
+        # Проверить, что первый результат такой же, как и на шаге 3
+        xpath = '//*[@id="rso"]/div/div/div[1]/div/div/div[1]/a'
+        url = self.drv.find_element_by_xpath(xpath)
+        assert 'https://selenide.org' in url.text
+        print(url.text)
+
+    def tearDown(self):
+        self.drv.close()
+
+if __name__=="__main__":
+    unittest.main()
